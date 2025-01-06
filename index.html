@@ -22,11 +22,11 @@
             font-size: 16px;
             cursor: pointer;
         }
-        ul#results-container {
+        ul#results-container, ul#all-recipes {
             list-style-type: none;
             padding: 0;
         }
-        ul#results-container li {
+        ul#results-container li, ul#all-recipes li {
             margin: 5px 0;
         }
     </style>
@@ -41,20 +41,29 @@
     </div>
     <ul id="results-container"></ul>
 
-    <!-- Recipe Links (Fallback) -->
+    <!-- Dynamic Recipe List -->
     <h2>All Recipes</h2>
-    <ul>
-        <li><a href="recipes/italian-sausage-soup.html">Italian Sausage Soup</a></li>
-        <li><a href="recipes/whole-wheat-muffins.html">Whole Wheat Muffins</a></li>
-        <li><a href="recipes/almond-braid.html">Almond Braid</a></li>
-    </ul>
+    <ul id="all-recipes"></ul>
 
-    <!-- Search Script -->
     <script>
+        // Load recipes from recipes.json
+        fetch('recipes.json')
+            .then(response => response.json())
+            .then(data => {
+                const recipeList = document.getElementById('all-recipes');
+                data.forEach(recipe => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<a href="${recipe.url}">${recipe.title}</a>`;
+                    recipeList.appendChild(li);
+                });
+            })
+            .catch(error => console.error('Error loading recipes:', error));
+
+        // Initialize Simple Jekyll Search
         SimpleJekyllSearch({
             searchInput: document.getElementById('search-input'),
             resultsContainer: document.getElementById('results-container'),
-            json: 'recipes.json',  // Correct relative path
+            json: 'recipes.json',
             noResultsText: 'No results found',
         });
 
