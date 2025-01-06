@@ -41,31 +41,39 @@
     </div>
     <ul id="results-container"></ul>
 
-    <!-- Recipe Links (Fallback) -->
-    <h2>All Recipes</h2>
-    <ul>
-        <li><a href="recipes/italian-sausage-soup.html">Italian Sausage Soup</a></li>
-        <li><a href="recipes/whole-wheat-muffins.html">Whole Wheat Muffins</a></li>
-        <li><a href="recipes/veggie-stir-fry.html">Veggie Stir Fry</a></li>
-    </ul>
+    <!-- Existing Search Script -->
+    <script>
+        SimpleJekyllSearch({
+            searchInput: document.getElementById('search-input'),
+            resultsContainer: document.getElementById('results-container'),
+            json: '/recipes.json',
+            noResultsText: 'No results found',
+        });
+    </script>
 
-    <!-- Search Script -->
+    <!-- Debugging Script: ADD THIS HERE -->
     <script>
         const searchInput = document.getElementById('search-input');
         const searchButton = document.getElementById('search-button');
 
-        // Initialize Simple Jekyll Search
-        SimpleJekyllSearch({
-            searchInput: searchInput,
-            resultsContainer: document.getElementById('results-container'),
-            json: '/recipes.json'
-        });
-
-        // Trigger search on button click
+        // Log when the search button is clicked
         searchButton.addEventListener('click', () => {
+            console.log('Search button clicked');
             const event = new Event('input', { bubbles: true });
             searchInput.dispatchEvent(event);
         });
+
+        // Log when the search bar input changes
+        searchInput.addEventListener('input', () => {
+            console.log('Search input changed:', searchInput.value);
+        });
+
+        // Monitor changes in the results container
+        const resultsContainer = document.getElementById('results-container');
+        const observer = new MutationObserver(() => {
+            console.log('Results updated:', resultsContainer.innerHTML);
+        });
+        observer.observe(resultsContainer, { childList: true });
     </script>
 </body>
 </html>
