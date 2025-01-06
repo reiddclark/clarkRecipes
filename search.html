@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Recipes</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/1.7.4/simple-jekyll-search.min.js"></script>
+</head>
+<body>
+    <h1>Search Recipes</h1>
+    <input type="text" id="search-input" placeholder="Search for recipes...">
+    <ul id="results-container"></ul>
+    <script>
+        SimpleJekyllSearch({
+            searchInput: document.getElementById('search-input'),
+            resultsContainer: document.getElementById('results-container'),
+            json: '/recipes.json'
+        });
+    </script>
+</body>
+</html>
