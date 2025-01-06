@@ -5,15 +5,43 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipe Site</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/1.7.4/simple-jekyll-search.min.js"></script>
+    <style>
+        #search-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        #search-input {
+            width: 300px;
+            padding: 10px;
+            font-size: 16px;
+        }
+        #search-button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        ul#results-container {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul#results-container li {
+            margin: 5px 0;
+        }
+    </style>
 </head>
 <body>
     <h1>Welcome to Our Recipe Collection</h1>
 
-    <!-- Search Bar -->
-    <input type="text" id="search-input" placeholder="Search for recipes..." style="width: 300px; padding: 10px; font-size: 16px;">
-    <ul id="results-container" style="list-style-type: none; padding: 0; margin-top: 20px;"></ul>
+    <!-- Search Container -->
+    <div id="search-container">
+        <input type="text" id="search-input" placeholder="Search for recipes...">
+        <button id="search-button">Search</button>
+    </div>
+    <ul id="results-container"></ul>
 
-    <!-- Recipe Links (Fallback if search is not used) -->
+    <!-- Recipe Links (Fallback) -->
     <h2>All Recipes</h2>
     <ul>
         <li><a href="recipes/italian-sausage-soup.html">Italian Sausage Soup</a></li>
@@ -23,10 +51,20 @@
 
     <!-- Search Script -->
     <script>
+        const searchInput = document.getElementById('search-input');
+        const searchButton = document.getElementById('search-button');
+
+        // Initialize Simple Jekyll Search
         SimpleJekyllSearch({
-            searchInput: document.getElementById('search-input'),
+            searchInput: searchInput,
             resultsContainer: document.getElementById('results-container'),
             json: '/recipes.json'
+        });
+
+        // Trigger search on button click
+        searchButton.addEventListener('click', () => {
+            const event = new Event('input', { bubbles: true });
+            searchInput.dispatchEvent(event);
         });
     </script>
 </body>
