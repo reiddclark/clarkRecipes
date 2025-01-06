@@ -4,13 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Recipe Site</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/simple-jekyll-search/1.7.4/simple-jekyll-search.min.js"></script>
 </head>
 <body>
     <h1>Welcome to Our Recipe Collection</h1>
+
+    <!-- Search Bar -->
+    <input type="text" id="search-input" placeholder="Search for recipes..." style="width: 300px; padding: 10px; font-size: 16px;">
+    <ul id="results-container" style="list-style-type: none; padding: 0; margin-top: 20px;"></ul>
+
+    <!-- Recipe Links (Fallback if search is not used) -->
+    <h2>All Recipes</h2>
     <ul>
-        <li><a href="recipes/italian_sausage_soup.html">Italian Sausage Soup</a></li>
-        <li><a href="recipes/whole_wheat_muffins.html">Whole Wheat Muffins</a></li>
-        <li><a href="recipes/veggie_stir_fry.html">Veggie Stir Fry</a></li>
+        <li><a href="recipes/italian-sausage-soup.html">Italian Sausage Soup</a></li>
+        <li><a href="recipes/whole-wheat-muffins.html">Whole Wheat Muffins</a></li>
+        <li><a href="recipes/veggie-stir-fry.html">Veggie Stir Fry</a></li>
     </ul>
+
+    <!-- Search Script -->
+    <script>
+        SimpleJekyllSearch({
+            searchInput: document.getElementById('search-input'),
+            resultsContainer: document.getElementById('results-container'),
+            json: '/recipes.json'
+        });
+    </script>
 </body>
 </html>
