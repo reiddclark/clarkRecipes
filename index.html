@@ -41,39 +41,28 @@
     </div>
     <ul id="results-container"></ul>
 
-    <!-- Existing Search Script -->
+    <!-- Recipe Links (Fallback) -->
+    <h2>All Recipes</h2>
+    <ul>
+        <li><a href="recipes/italian_sausage_soup.html">Italian Sausage Soup</a></li>
+        <li><a href="recipes/whole_wheat_muffins.html">Whole Wheat Muffins</a></li>
+        <li><a href="recipes/veggie_stir_fry.html">Veggie Stir Fry</a></li>
+    </ul>
+
+    <!-- Search Script -->
     <script>
         SimpleJekyllSearch({
             searchInput: document.getElementById('search-input'),
             resultsContainer: document.getElementById('results-container'),
-            json: '/recipes.json',
+            json: 'recipes.json',  // Correct relative path
             noResultsText: 'No results found',
         });
-    </script>
 
-    <!-- Debugging Script: ADD THIS HERE -->
-    <script>
-        const searchInput = document.getElementById('search-input');
-        const searchButton = document.getElementById('search-button');
-
-        // Log when the search button is clicked
-        searchButton.addEventListener('click', () => {
-            console.log('Search button clicked');
+        // Trigger search on button click
+        document.getElementById('search-button').addEventListener('click', () => {
             const event = new Event('input', { bubbles: true });
-            searchInput.dispatchEvent(event);
+            document.getElementById('search-input').dispatchEvent(event);
         });
-
-        // Log when the search bar input changes
-        searchInput.addEventListener('input', () => {
-            console.log('Search input changed:', searchInput.value);
-        });
-
-        // Monitor changes in the results container
-        const resultsContainer = document.getElementById('results-container');
-        const observer = new MutationObserver(() => {
-            console.log('Results updated:', resultsContainer.innerHTML);
-        });
-        observer.observe(resultsContainer, { childList: true });
     </script>
 </body>
 </html>
