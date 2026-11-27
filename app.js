@@ -49,6 +49,8 @@ let byId=new Map(recipes.map(r=>[r.id,r]));
 const state={query:'',searchSort:'relevance',browseSort:'az',searchLimit:40,browseLimit:40,category:'',mode:'search'};
 let oldScroll=0, activeId='', toastTimer, lastHomeHash='#';
 const q=$('search'), catButtons=new Map();
+const header = document.querySelector('.top');
+const compactNav = $('compact-nav');
 const categoryHref=c=>'#category/'+encodeURIComponent(c);
 function renderCategories(){
  $('category-grid').replaceChildren();catButtons.clear();
@@ -66,6 +68,7 @@ function setQuery(s){state.query=s;q.value=s;state.searchLimit=40;renderResults(
 function renderHome(){
  const browsing=state.mode==='browse';
  $('home-link').setAttribute('aria-current',browsing?'false':'page');$('category-link').setAttribute('aria-current',browsing?'page':'false');
+ $('compact-browse').setAttribute('aria-current',state.mode==='browse'&&!state.category?'page':'false');
  $('search-panel').hidden=browsing;$('categories').hidden=!browsing||!!state.category;
  $('results').hidden=browsing&&!state.category;$('back-categories').hidden=!browsing;
  if(!$('results').hidden)renderResults();
@@ -90,7 +93,7 @@ function renderResults(){
 q.addEventListener('input',()=>setQuery(q.value));$('search-form').addEventListener('submit',e=>{e.preventDefault();});$('clear-search').addEventListener('click',()=>{setQuery('');q.focus();});
 $('sort').addEventListener('change',e=>{if(state.mode==='browse'){state.browseSort=e.target.value;state.browseLimit=40;}else{state.searchSort=e.target.value;state.searchLimit=40;}renderResults();});
 $('more').addEventListener('click',()=>{if(state.mode==='browse')state.browseLimit+=40;else state.searchLimit+=40;renderResults();});
-for(const a of document.querySelectorAll('.brand,#home-link,#category-link'))a.addEventListener('click',()=>{oldScroll=0;if(a.classList.contains('brand')){state.query='';q.value='';state.searchLimit=40;state.searchSort='relevance';}if(location.hash===a.hash||(!location.hash&&a.getAttribute('href')==='#')){if(!view.hidden)return;renderHome();window.scrollTo(0,0);}});
+for(const a of document.querySelectorAll('.brand,#home-link,#category-link,#compact-browse'))a.addEventListener('click',()=>{oldScroll=0;if(a.classList.contains('brand')){state.query='';q.value='';state.searchLimit=40;state.searchSort='relevance';}if(location.hash===a.hash||(!location.hash&&a.getAttribute('href')==='#')){if(!view.hidden)return;renderHome();window.scrollTo(0,0);}});
 function toast(message){$('toast').textContent=message;$('toast').hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').hidden=true,3200);}
 function share(){const url=location.href;if(location.protocol==='file:'){toast('This is a local preview. Share links will work after deployment.');return;}if(navigator.share){navigator.share({title:document.title,url}).catch(e=>{if(e.name!=='AbortError')copyUrl(url);});}else copyUrl(url);}
 async function copyUrl(url){try{await navigator.clipboard.writeText(url);toast('Recipe link copied.');}catch{window.prompt('Copy recipe link:',url);}}
@@ -117,6 +120,32 @@ function route(){
  view.hidden=true;error.hidden=true;home.hidden=false;document.title='Clark Family Cookbook';renderHome();
  requestAnimationFrame(()=>window.scrollTo({top:returning&&previous===lastHomeHash?oldScroll:0,behavior:'instant'}));activeId='';
 }
+// The full navigation yields to the compact bar once it has scrolled away.
+if ('IntersectionObserver' in window) {
+  const observer = new IntersectionObserver(([entry]) => {
+    compactNav.hidden = entry.isIntersecting;
+  });
+  observer.observe(header);
+}
+
+$('compact-search').addEventListener('click', () => {
+  if (state.mode === 'browse') {
+    history.pushState(null, '', '#');
+    route();
+  }
+  window.scrollTo({top: 0, behavior: 'instant'});
+  q.focus({preventScroll: true});
+});
+
+$('compact-browse').addEventListener('click', () => {
+  $('category-link').focus({preventScroll: true});
+});
+
+$('compact-top').addEventListener('click', () => {
+  header.querySelector('.brand').focus({preventScroll: true});
+  window.scrollTo({top: 0});
+});
+
 window.addEventListener('cookbook-preview-update',()=>{recipes=data.recipes;index=buildIndex(recipes);byId=new Map(recipes.map(r=>[r.id,r]));renderCategories();if(location.hash!=='#admin')route();});
 window.addEventListener('hashchange',route);route();
 })();
