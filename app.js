@@ -108,7 +108,7 @@ function renderRecipe(r){
  h.append(el('h2','','Ingredients'),button('Reset','text-button',()=>{checks.forEach(c=>c.checked=false);update();}));panel.append(h,progress);function update(){progress.textContent=`${checks.filter(c=>c.checked).length} of ${checks.length} checked`;}
  for(const i of r.ingredients){if(i.heading){panel.append(el('h3','ingredient-heading',i.display_text));continue;}const label=el('label','ingredient-row'), check=el('input');check.type='checkbox';check.addEventListener('change',update);checks.push(check);label.append(check,el('span','',i.display_text));panel.append(label);}
  if(!checks.length)panel.append(el('p','byline','No ingredients recorded.'));update();
- const directions=el('section');directions.append(el('h2','','Directions'),el('div','directions',r.instructions||'No directions recorded.'));body.append(panel,directions);view.append(body);
+ const directions=el('section');directions.append(el('h2','','Directions'),window.CookbookDirections.render(r.instructions));body.append(panel,directions);view.append(body);
 }
 function route(){
  const hash=location.hash;if(hash==='#admin' && $('admin-view')){home.hidden=true;view.hidden=true;error.hidden=true;return;}let id='';if(hash.startsWith('#recipe/')){try{id=decodeURIComponent(hash.slice(8));}catch{id='invalid';}}
