@@ -3,8 +3,6 @@
 
   function readSteps(source) {
     const lines = source.split(/\r?\n/);
-    if (!lines.some(line => /^[ \t]+Uses: \S/.test(line))) return null;
-
     const steps = [];
     let current;
     for (const line of lines) {
@@ -22,6 +20,8 @@
         return null;
       }
     }
+    // Some older recipes put several numbered directions in one paragraph.
+    if (steps.length === 1 && !steps[0].ingredients.length && /[.;]\s*\d+\.\s/.test(steps[0].text)) return null;
     return steps.length ? steps : null;
   }
 
