@@ -1,2 +1,0 @@
-# clarkRecipes
-Clank Family Recipes
